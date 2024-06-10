@@ -1,46 +1,32 @@
-//http://localhost:4000/
+//http://localhost:4040/
 
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+// Import express module
+const express = require('express');
+const path = require('path')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+//Call express create an instance of the application and define the port
+const app = express();
+const PORT = 4040;
 
-var app = express();
+app.use(express.static('public'));
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.get('/', (req,res)=>{
+    res.sendFile(path.join(__dirname, 'public', 'home.html'));
+})
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.get('/game', (req,res)=>{
+    res.sendFile(path.join(__dirname, 'public', 'game.html'));
+})
 
-// Serve static JavaScript files
-app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
 
-// Catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+// Use listen method to listen to desired PORT and start the server. 
+app.listen(PORT, (error) =>{
+    if(!error)
+        console.log("Server is Successfully Running, and App is listening on port "+ PORT)
+    else 
+        console.log("Error occurred, server can't start", error);
+    }
+);
 
-// Error handler
-app.use(function(err, req, res, next) {
-  // Set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // Render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-module.exports = app;
+module.exports = app
